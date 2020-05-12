@@ -57,23 +57,28 @@ main
   border-right border
 
 .options__option
-  height 52px
-  line-height 52px
-  font-size 1.3rem
-  padding-left 1.3rem
+  height 3rem
+  line-height 3rem
+  font-size 1rem
+  padding-left 1rem
   margin 4px 4px 0 4px
   cursor pointer
   &:hover
     background #333
 
-.options__title
-  height 52px
-  line-height 52px
-  font-size 1.3rem
-  padding-left 1.3rem
+.options__newlist
+  color #fff
+  height 3rem
+  line-height 3rem
+  font-size 1rem
+  padding-left 1rem
   margin 4px 4px 0 4px
-  border-bottom border
+  background #111
+  border border
 
+.options hr
+  border 1px solid #333
+  margin 4px 4px 0 4px
 
 .options__option--selected
     background #222
@@ -97,32 +102,36 @@ main
   height 40px
   width 40px
   right 0
-  bottom 0
-  margin 10px
+  top 0
+  margin 9px
   background #111
   border border
+  border-radius 5px
+  background url("../img/bg-new-task.png") center center no-repeat
+  cursor pointer
 
 .task
-  display flex
-  height 38px
-  line-height 38px
-  border-bottom border
+  height 2rem
+  line-height 2rem
+  border 2px solid #111
+
+.task input[type="checkbox"]
+  width 1rem
+  height 1rem
+  margin 0.5rem
 
 .task__done
-  width 10%
-  text-align center
-  border-right border
+  float left
+  width 2rem
 
 .task__text
-  width 75%
-  padding 0 1rem
-  border-right border
+  float left
+  padding-left .25rem
 
 .task__important
-  text-align center
-  width 15%
+  float right
 
-.new-task
+.new-task, .info-task
   position absolute
   top -50%
   left 50%
@@ -189,3 +198,6 @@ main
   border 1px solid #c0392b
   border-radius 3px
   padding 0 1rem
+
+//.info-task
+//  top: 50%
