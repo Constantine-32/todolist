@@ -13,6 +13,7 @@ body
   width 50vw
   min-width 960px
   margin 0 auto
+  overflow hidden
 
 header
   display flex
@@ -43,6 +44,7 @@ header
     padding 0 10px
 
 main
+  position relative
   display flex
   border border
 
@@ -77,7 +79,6 @@ main
     background #222
 
 .tasks
-  position relative
   width 75%
   height 70vh
 
@@ -88,16 +89,18 @@ main
   text-align center
   border-bottom border
 
+.hidden
+  display none
+
 .tasks__new-task
   position absolute
   height 40px
   width 40px
   right 0
   bottom 0
-  margin 20px
+  margin 10px
   background #111
   border border
-  border-radius 50%
 
 .task
   display flex
@@ -118,3 +121,71 @@ main
 .task__important
   text-align center
   width 15%
+
+.new-task
+  position absolute
+  top -50%
+  left 50%
+  padding 0 3rem 1rem 3rem
+  transform translate(-50%, -50%)
+  display flex
+  flex-direction column
+  background #111
+  border border
+  transition top 1s
+  h1
+    font-size 2rem
+    height 5rem
+    line-height 5rem
+    font-weight normal
+    text-align center
+
+.new-task__section
+  display flex
+  justify-content flex-end
+  line-height 2rem
+  margin .5rem
+
+  label
+    font-size 1rem
+    text-align right
+    padding-right 1rem
+
+  input, textarea, select, button
+    font-size 1rem
+    color #fff
+    background #111
+    border border
+    border-radius 5px
+    padding 0 .5rem
+
+  input[type="text"]
+    width 320px
+
+  select
+    width 340px
+
+  input[type="checkbox"]
+    height 1rem
+    width 1rem
+    margin .5rem
+
+  textarea
+    resize none
+    font-size 1rem
+    font-family 'Roboto', sans-serif
+    padding .5rem
+    width 20rem
+
+  button
+    height 2.5rem
+    padding 0 1rem
+    cursor pointer
+    margin-left 3px
+
+.new-task__section__warning
+  color #111
+  background #e74c3c
+  border 1px solid #c0392b
+  border-radius 3px
+  padding 0 1rem

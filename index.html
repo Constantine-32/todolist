@@ -10,32 +10,70 @@
 <header>
   <h1>Todo List</h1>
   <div class="header__search">
-    <input type="text" placeholder="Search...">
+    <input type="search" placeholder="Search...">
   </div>
 </header>
 <main>
   <aside class="options">
-    <div class="options__option options__option--selected">Tasks</div>
-    <div class="options__option">Important</div>
-    <div class="options__option">Completed</div>
-    <div class="options__title">Custom lists</div>
+    <div id="option-tasks" class="options__option options__option--selected">Tasks</div>
+    <div id="option-important" class="options__option">Important</div>
+    <div id="option-completed" class="options__option">Completed</div>
+    <div id="option-custom" class="options__title">Custom lists</div>
   </aside>
   <section class="tasks">
     <div class="tasks__header">Tasks</div>
-    <div class="tasks__container">
-      <div class="task">
-        <div class="task__done"><input type="checkbox"></div>
-        <div class="task__text">Task 1</div>
-        <div class="task__important"><input type="checkbox"> Important</div>
-      </div>
-      <div class="task">
-        <div class="task__done"><input type="checkbox"></div>
-        <div class="task__text">Task 2</div>
-        <div class="task__important"><input type="checkbox"> Important</div>
-      </div>
-    </div>
-    <button class="tasks__new-task"></button>
+    <div class="tasks__container"></div>
   </section>
+  <button class="tasks__new-task"></button>
 </main>
+<div class="new-task">
+  <h1>New Task</h1>
+  <div class="new-task__section">
+    <label>Title</label>
+    <input id="new-task-title" type="text" maxlength="50">
+  </div>
+  <div class="new-task__section">
+    <div id="new-task-title-warning"  class="new-task__section__warning hidden">Title is required with a lenght between 3 to 50</div>
+  </div>
+  <div class="new-task__section">
+    <label>Description</label>
+    <textarea id="new-task-description" rows="4" maxlength="500"></textarea>
+  </div>
+  <div class="new-task__section">
+    <div id="new-task-description-warning" class="new-task__section__warning hidden">Description is required with a max length of 500</div>
+  </div>
+  <div class="new-task__section">
+    <input type="checkbox" id="new-task-completed">
+    <label>Completed</label>
+    <input type="checkbox" id="new-task-important">
+    <label>Important</label>
+  </div>
+  <div class="new-task__section">
+    <label>Task color</label>
+    <select id="new-task-color">
+      <option value="#111111" style="background: #111111"></option>
+      <option value="#e74c3c" style="background: #e74c3c"></option>
+      <option value="#e67e22" style="background: #e67e22"></option>
+      <option value="#f1c40f" style="background: #f1c40f"></option>
+      <option value="#2ecc71" style="background: #2ecc71"></option>
+      <option value="#1abc9c" style="background: #1abc9c"></option>
+      <option value="#3498db" style="background: #3498db"></option>
+      <option value="#9b59b6" style="background: #9b59b6"></option>
+    </select>
+  </div>
+  <div class="new-task__section">
+    <label>Custom list</label>
+    <select id="new-task-list">
+      <option value="0" selected>Default</option>
+    </select>
+  </div>
+  <div class="new-task__section">
+    <button id="new-task-accept">Accept</button>
+    <button id="new-task-cancel">Cancel</button>
+  </div>
+</div>
+<div class="info-task">
+  <h1>Task Info</h1>
+</div>
 </body>
 </html>
