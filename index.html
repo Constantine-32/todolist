@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Todo List</h1>
+  <div class="header__search">
+    <input type="text" placeholder="Search...">
+  </div>
+</header>
+<main>
+  <aside class="options">
+    <div class="options__option options__option--selected">Tasks</div>
+    <div class="options__option">Important</div>
+    <div class="options__option">Completed</div>
+    <div class="options__title">Custom lists</div>
+  </aside>
+  <section class="tasks">
+    <div class="tasks__header">Tasks</div>
+    <div class="tasks__container">
+      <div class="task">
+        <div class="task__done"><input type="checkbox"></div>
+        <div class="task__text">Task 1</div>
+        <div class="task__important"><input type="checkbox"> Important</div>
+      </div>
+      <div class="task">
+        <div class="task__done"><input type="checkbox"></div>
+        <div class="task__text">Task 2</div>
+        <div class="task__important"><input type="checkbox"> Important</div>
+      </div>
+    </div>
+    <button class="tasks__new-task"></button>
+  </section>
+</main>
+</body>
+</html>
