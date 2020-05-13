@@ -116,7 +116,7 @@ main {
   margin: 9px;
   background: #111;
   border: 2px solid #333;
-  border-radius: 5px;
+  border-radius: 50%;
   background: url("../img/bg-new-task.png") center center no-repeat;
   cursor: pointer;
 }
@@ -148,6 +148,16 @@ main {
 }
 .task__delete:hover {
   background: #c0392b;
+}
+.list__delete {
+  float: right;
+  margin: 13px;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+}
+.list__delete:hover {
+  background: #e74c3c;
 }
 .new-task-container,
 .info-task-container {

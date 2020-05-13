@@ -64,6 +64,7 @@ function createListHTML(list, id) {
   div.id = 'list-' + id
   div.classList.add('options__option')
   div.textContent = list
+  div.innerHTML += '<span class="list__delete"></span>'
   optionsNewList.value = ''
   optionsNewList.before(div)
 
@@ -100,6 +101,7 @@ function newList(e) {
   if (e.key !== 'Enter') return
   const list = e.target.value
   if (list.length < 3 || list.length > 25) return
+  if (data.lists.includes(list)) return
 
   data.lists.push(list)
   storeLocalStorageData()
@@ -138,12 +140,17 @@ function generalClickHandler(e) {
   const target = e.target
   const parent = target.parentElement
   if (parent.classList.contains('options')) optionsClickHandler(target)
+  if (target.classList.contains('list__delete')) listDelete(parent)
   if (target.classList.contains('checkbox-completed')) taskCompleted(target)
   if (target.classList.contains('checkbox-important')) taskImportant(target)
   if (target.classList.contains('tasks__new-task')) showNewTaskDiv()
   if (target.classList.contains('task')) taskInfo(target)
   if (target.classList.contains('task__delete')) taskDelete(parent)
   else if (parent.classList.contains('task')) taskInfo(parent)
+}
+
+function listDelete(list) {
+  console.log(list)
 }
 
 function taskDelete(task) {
