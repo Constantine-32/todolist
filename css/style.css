@@ -125,6 +125,7 @@ main {
   align-items: center;
   height: 2rem;
   border-bottom: 2px solid #333;
+  cursor: pointer;
 }
 .task .checkbox-label {
   margin: 0 1rem;
@@ -137,6 +138,16 @@ main {
 }
 .task__title--important {
   font-weight: bold;
+}
+.task__delete {
+  height: 18px;
+  width: 18px;
+  margin-right: 1rem;
+  border: 2px solid #c0392b;
+  border-radius: 50%;
+}
+.task__delete:hover {
+  background: #c0392b;
 }
 .new-task-container,
 .info-task-container {

@@ -46,6 +46,7 @@ function createDataHTML() {
 }
 
 function createTaskHTML(task, id) {
+  if (!task) return
   const div = document.createElement('div')
   div.id = id
   div.classList.add('task')
@@ -53,6 +54,7 @@ function createTaskHTML(task, id) {
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.completed ? 'checked' : ''}><span class="checkbox-completed"></span></label>`
   div.innerHTML += `<span class="task__title${task.completed ? ' task__title--completed' : ''}${task.important ? ' task__title--important' : ''}">${task.title}</span>`
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.important ? 'checked' : ''}><span class="checkbox-important"></span></label>`
+  div.innerHTML += '<span class="task__delete"></span>'
   tasksContainer.appendChild(div)
 }
 
@@ -140,7 +142,14 @@ function generalClickHandler(e) {
   if (target.classList.contains('checkbox-important')) taskImportant(target)
   if (target.classList.contains('tasks__new-task')) showNewTaskDiv()
   if (target.classList.contains('task')) taskInfo(target)
-  if (parent.classList.contains('task')) taskInfo(parent)
+  if (target.classList.contains('task__delete')) taskDelete(parent)
+  else if (parent.classList.contains('task')) taskInfo(parent)
+}
+
+function taskDelete(task) {
+  data.tasks[task.id] = undefined
+  storeLocalStorageData()
+  tasksContainer.removeChild(task)
 }
 
 function taskInfo(target) {
@@ -158,7 +167,7 @@ function optionsClickHandler(target) {
 }
 
 function optionFilter(task) {
-  if (selectedFilter.id === 'option-tasks') return !data.tasks[task.id].completed && !data.tasks[task.id].important
+  if (selectedFilter.id === 'option-tasks') return !data.tasks[task.id].completed
   if (selectedFilter.id === 'option-important') return !data.tasks[task.id].completed && data.tasks[task.id].important
   if (selectedFilter.id === 'option-completed') return data.tasks[task.id].completed
 }
@@ -221,6 +230,7 @@ function taskCompleted(target) {
   data.tasks[taskHTML.id].completed = !data.tasks[taskHTML.id].completed
   storeLocalStorageData()
   taskHTML.children[1].classList.toggle('task__title--completed')
+  setTimeout(updateFilteredTasks, 800)
 }
 
 function taskImportant(target) {
@@ -228,6 +238,7 @@ function taskImportant(target) {
   data.tasks[taskHTML.id].important = !data.tasks[taskHTML.id].important
   storeLocalStorageData()
   taskHTML.children[1].classList.toggle('task__title--important')
+  setTimeout(updateFilteredTasks, 800)
 }
 
 function newTaskColorChange(e) {
