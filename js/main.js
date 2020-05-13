@@ -20,8 +20,9 @@ const infoTaskDescription = document.querySelector('#info-task-description')
 const infoTaskAccept = document.querySelector('#info-task-accept')
 
 let selectedFilter = document.querySelector('#option-tasks')
-let selectedList = document.querySelector('#list-0')
+let selectedList = document.querySelector('.options__list')
 const data = loadLocalStorageData()
+const dataHTML = { lists: [selectedList], tasks: [] }
 createDataHTML()
 
 // Functions
@@ -39,16 +40,19 @@ function storeTask(task) {
   storeLocalStorageData()
 }
 
+function storeList(list) {
+  data.lists.push(list)
+  storeLocalStorageData()
+}
+
 function createDataHTML() {
   data.lists.forEach(createListHTML)
   data.tasks.forEach(createTaskHTML)
   updateFilteredTasks()
 }
 
-function createTaskHTML(task, id) {
-  if (!task) return
+function createTaskHTML(task) {
   const div = document.createElement('div')
-  div.id = id
   div.classList.add('task')
   div.style.color = task.color
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.completed ? 'checked' : ''}><span class="checkbox-completed"></span></label>`
@@ -56,20 +60,21 @@ function createTaskHTML(task, id) {
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.important ? 'checked' : ''}><span class="checkbox-important"></span></label>`
   div.innerHTML += '<span class="task__delete"></span>'
   tasksContainer.appendChild(div)
+  dataHTML.tasks.push(div)
 }
 
-function createListHTML(list, id) {
+function createListHTML(list) {
   if (list === 'Default') return
   const div = document.createElement('div')
-  div.id = 'list-' + id
-  div.classList.add('options__option')
+  div.classList.add('options__list')
   div.textContent = list
   div.innerHTML += '<span class="list__delete"></span>'
   optionsNewList.value = ''
   optionsNewList.before(div)
+  dataHTML.lists.push(div)
 
   const option = document.createElement('option')
-  option.value = id
+  option.value = list
   option.textContent = list
   newTaskList.appendChild(option)
 }
@@ -91,9 +96,9 @@ function newTask() {
   task.completed = newTaskCompleted.checked
   task.important = newTaskImportant.checked
   task.color = newTaskColor.value
-  task.listID = newTaskList.value
+  task.list = newTaskList.value
   storeTask(task)
-  createTaskHTML(task, data.tasks.indexOf(task))
+  createTaskHTML(task)
   hideNewTaskDiv()
 }
 
@@ -102,10 +107,8 @@ function newList(e) {
   const list = e.target.value
   if (list.length < 3 || list.length > 25) return
   if (data.lists.includes(list)) return
-
-  data.lists.push(list)
-  storeLocalStorageData()
-  createListHTML(list, data.lists.indexOf(list))
+  storeList(list)
+  createListHTML(list)
 }
 
 function showNewTaskDiv() {
@@ -154,13 +157,15 @@ function listDelete(list) {
 }
 
 function taskDelete(task) {
-  data.tasks[task.id] = undefined
+  const index = dataHTML.tasks.indexOf(task)
+  data.tasks.splice(index, 1)
+  dataHTML.tasks.splice(index, 1)
   storeLocalStorageData()
   tasksContainer.removeChild(task)
 }
 
 function taskInfo(target) {
-  const task = data.tasks[target.id]
+  const task = data.tasks[dataHTML.tasks.indexOf(target)]
   infoTaskTitle.textContent = 'Title: ' + task.title
   infoTaskDescription.textContent = 'Description: ' + task.description
   showInfoTaskDiv()
@@ -170,24 +175,25 @@ function optionsClickHandler(target) {
   if (target.id === 'option-tasks') optionTasks(target)
   if (target.id === 'option-important') optionImportant(target)
   if (target.id === 'option-completed') optionCompleted(target)
-  if (target.id.indexOf('list-') > -1) optionList(target)
+  if (target.classList.contains('options__list')) optionList(target)
 }
 
 function optionFilter(task) {
-  if (selectedFilter.id === 'option-tasks') return !data.tasks[task.id].completed
-  if (selectedFilter.id === 'option-important') return !data.tasks[task.id].completed && data.tasks[task.id].important
-  if (selectedFilter.id === 'option-completed') return data.tasks[task.id].completed
+  const temp = data.tasks[dataHTML.tasks.indexOf(task)]
+  if (selectedFilter.id === 'option-tasks') return !temp.completed
+  if (selectedFilter.id === 'option-important') return !temp.completed && temp.important
+  if (selectedFilter.id === 'option-completed') return temp.completed
 }
 
 function searchFilter(task) {
   const filter = taskSearch.value.toLowerCase()
-  return data.tasks[task.id].title.toLowerCase().indexOf(filter) > -1
+  return data.tasks[dataHTML.tasks.indexOf(task)].title.toLowerCase().indexOf(filter) > -1
 }
 
 function listFilter(task) {
-  const taskListId = data.tasks[task.id].listID
-  const listId = selectedList.id.split('-')[1]
-  return taskListId == listId
+  const taskList = data.tasks[dataHTML.tasks.indexOf(task)].list
+  const list = selectedList.textContent
+  return taskList === list
 }
 
 function updateFilteredTasks() {
@@ -234,7 +240,7 @@ function searchTask() {
 
 function taskCompleted(target) {
   const taskHTML = target.parentElement.parentElement
-  data.tasks[taskHTML.id].completed = !data.tasks[taskHTML.id].completed
+  data.tasks[dataHTML.tasks.indexOf(taskHTML)].completed = !data.tasks[dataHTML.tasks.indexOf(taskHTML)].completed
   storeLocalStorageData()
   taskHTML.children[1].classList.toggle('task__title--completed')
   setTimeout(updateFilteredTasks, 800)
@@ -242,14 +248,14 @@ function taskCompleted(target) {
 
 function taskImportant(target) {
   const taskHTML = target.parentElement.parentElement
-  data.tasks[taskHTML.id].important = !data.tasks[taskHTML.id].important
+  data.tasks[dataHTML.tasks.indexOf(taskHTML)].important = !data.tasks[dataHTML.tasks.indexOf(taskHTML)].important
   storeLocalStorageData()
   taskHTML.children[1].classList.toggle('task__title--important')
   setTimeout(updateFilteredTasks, 800)
 }
 
 function newTaskColorChange(e) {
-  e.target.style.background = e.target.value.split(' ')[0]
+  e.target.style.background = e.target.value
 }
 
 function newTaskContainerClick(e) {

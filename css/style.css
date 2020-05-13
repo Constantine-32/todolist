@@ -59,7 +59,8 @@ main {
 .options::-webkit-scrollbar {
   display: none;
 }
-.options__option {
+.options__option,
+.options__list {
   height: 3rem;
   line-height: 3rem;
   font-size: 1rem;
@@ -67,7 +68,8 @@ main {
   margin: 4px 4px 0 4px;
   cursor: pointer;
 }
-.options__option:hover {
+.options__option:hover,
+.options__list:hover {
   background: #333;
 }
 .options__newlist {
