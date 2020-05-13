@@ -1,5 +1,4 @@
 const taskSearch = document.querySelector('#task-search')
-const optionsContainer = document.querySelector('.options')
 const optionsNewList = document.querySelector('.options__newlist')
 const mainContainer = document.querySelector('main')
 const tasksHeader = document.querySelector('.tasks__header')
@@ -18,6 +17,8 @@ const newTaskCancel = document.querySelector('#new-task-cancel')
 
 const data = loadLocalStorageData()
 createTasksHTML()
+
+let selectedFilter = document.querySelector('#option-tasks')
 
 // Functions
 function loadLocalStorageData() {
@@ -42,16 +43,10 @@ function createTaskHTML(task, id) {
   const div = document.createElement('div')
   div.id = id
   div.classList.add('task')
-  const colors = task.color.split(' ')
-  div.style.background = colors[0]
-  if (colors[0] === '#111111') {
-    div.style.borderBottom = '2px solid #333'
-  } else {
-    div.style.border = '2px solid ' + colors[1]
-  }
-  div.innerHTML += `<div class="task__done"><input type="checkbox" ${task.completed ? 'checked' : ''}>`
-  div.innerHTML += `</div><div class="task__text">${task.title}</div>`
-  div.innerHTML += `<div class="task__important"><input type="checkbox" ${task.important ? 'checked' : ''}></div>`
+  div.style.color = task.color
+  div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.completed ? 'checked' : ''}><span class="checkbox-completed"></span></label>`
+  div.innerHTML += `<span class="task__title${task.completed ? ' task__title--completed' : ''}">${task.title}</span>`
+  div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.important ? 'checked' : ''}><span class="checkbox-important"></span></label>`
   tasksContainer.appendChild(div)
 }
 
@@ -94,49 +89,77 @@ function newTask() {
 }
 
 function generalClickHandler(e) {
-  const classList = e.target.parentElement.classList
-  if (classList.contains('options')) optionsClickHandler(e)
-  if (classList.contains('task')) taskClickHandler(e)
-  if (e.target.classList.contains('tasks__new-task')) showNewTaskDiv()
+  const target = e.target
+  const parent = target.parentElement
+  if (parent.classList.contains('options')) optionsClickHandler(target)
+  if (target.classList.contains('checkbox-completed')) taskCompleted(target)
+  if (target.classList.contains('checkbox-important')) taskImportant(target)
+  if (target.classList.contains('tasks__new-task')) showNewTaskDiv()
 }
 
-function optionsClickHandler(e) {
-  const id = e.target.id
-  if (id === 'option-tasks') optionTasks()
-  if (id === 'option-important') optionImportant()
-  if (id === 'option-completed') optionCompleted()
+function optionsClickHandler(target) {
+  if (target.id === 'option-tasks') optionTasks(target)
+  if (target.id === 'option-important') optionImportant(target)
+  if (target.id === 'option-completed') optionCompleted(target)
 }
 
-function optionTasks() {
+function optionFilter(task) {
+  if (selectedFilter.id === 'option-tasks') return true
+  if (selectedFilter.id === 'option-important') return data.tasks[task.id].important
+  if (selectedFilter.id === 'option-completed') return data.tasks[task.id].completed
+}
+
+function searchFilter(task) {
+  const filter = taskSearch.value.toLowerCase()
+  return data.tasks[task.id].title.toLowerCase().indexOf(filter) > -1
+}
+
+function updateFilteredTasks() {
+  for (const task of tasksContainer.children) {
+    if (optionFilter(task) && searchFilter(task)) task.classList.remove('hidden')
+    else task.classList.add('hidden')
+  }
+}
+
+function optionTasks(target) {
+  selectedFilter.classList.remove('options__option--selected')
+  selectedFilter = target
+  selectedFilter.classList.add('options__option--selected')
   tasksHeader.textContent = 'Tasks'
-  for (const task of tasksContainer.children) {
-    task.classList.remove('hidden')
-  }
+  updateFilteredTasks()
 }
 
-function optionImportant() {
+function optionImportant(target) {
+  selectedFilter.classList.remove('options__option--selected')
+  selectedFilter = target
+  selectedFilter.classList.add('options__option--selected')
   tasksHeader.textContent = 'Important'
-  for (const task of tasksContainer.children) {
-    data.tasks[task.id].important ? task.classList.remove('hidden') : task.classList.add('hidden')
-  }
+  updateFilteredTasks()
 }
 
-function optionCompleted() {
+function optionCompleted(target) {
+  selectedFilter.classList.remove('options__option--selected')
+  selectedFilter = target
+  selectedFilter.classList.add('options__option--selected')
   tasksHeader.textContent = 'Completed'
-  for (const task of tasksContainer.children) {
-    data.tasks[task.id].completed ? task.classList.remove('hidden') : task.classList.add('hidden')
-  }
+  updateFilteredTasks()
 }
 
-function searchTask(e) {
-  const filter = e.target.value.toLowerCase()
-  for (const task of tasksContainer.children) {
-    data.tasks[task.id].title.toLowerCase().indexOf(filter) > -1 ? task.classList.remove('hidden') : task.classList.add('hidden')
-  }
+function searchTask() {
+  updateFilteredTasks()
 }
 
-function taskClickHandler(e) {
-  console.log(e.target.parentElement.id)
+function taskCompleted(target) {
+  const taskHTML = target.parentElement.parentElement
+  data.tasks[taskHTML.id].completed = !data.tasks[taskHTML.id].completed
+  storeLocalStorageData()
+  taskHTML.children[1].classList.toggle('task__title--completed')
+}
+
+function taskImportant(target) {
+  const taskHTML = target.parentElement.parentElement
+  data.tasks[taskHTML.id].important = !data.tasks[taskHTML.id].important
+  storeLocalStorageData()
 }
 
 function newTaskColorChange(e) {
