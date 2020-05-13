@@ -15,10 +15,10 @@ const newTaskList = document.querySelector('#new-task-list')
 const newTaskAccept = document.querySelector('#new-task-accept')
 const newTaskCancel = document.querySelector('#new-task-cancel')
 
-const data = loadLocalStorageData()
-createTasksHTML()
-
 let selectedFilter = document.querySelector('#option-tasks')
+let selectedList = document.querySelector('#list-0')
+const data = loadLocalStorageData()
+createDataHTML()
 
 // Functions
 function loadLocalStorageData() {
@@ -35,8 +35,10 @@ function storeTask(task) {
   storeLocalStorageData()
 }
 
-function createTasksHTML() {
+function createDataHTML() {
+  data.lists.forEach(createListHTML)
   data.tasks.forEach(createTaskHTML)
+  updateFilteredTasks()
 }
 
 function createTaskHTML(task, id) {
@@ -45,24 +47,24 @@ function createTaskHTML(task, id) {
   div.classList.add('task')
   div.style.color = task.color
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.completed ? 'checked' : ''}><span class="checkbox-completed"></span></label>`
-  div.innerHTML += `<span class="task__title${task.completed ? ' task__title--completed' : ''}">${task.title}</span>`
+  div.innerHTML += `<span class="task__title${task.completed ? ' task__title--completed' : ''}${task.important ? ' task__title--important' : ''}">${task.title}</span>`
   div.innerHTML += `<label class="checkbox-label"><input type="checkbox" ${task.important ? 'checked' : ''}><span class="checkbox-important"></span></label>`
   tasksContainer.appendChild(div)
 }
 
-function showNewTaskDiv() {
-  newTaskTitleWarning.classList.add('hidden')
-  newTaskDescriptionWarning.classList.add('hidden')
-  newTaskDiv.style.transition = 'none'
-  newTaskDiv.style.top = '-50%'
-  requestAnimationFrame(() => {
-    newTaskDiv.style.transition = 'top 1s'
-    newTaskDiv.style.top = '50%'
-  })
-}
+function createListHTML(list, id) {
+  if (list === 'Default') return
+  const div = document.createElement('div')
+  div.id = 'list-' + id
+  div.classList.add('options__option')
+  div.textContent = list
+  optionsNewList.value = ''
+  optionsNewList.before(div)
 
-function hideNewTaskDiv() {
-  newTaskDiv.style.top = '150%'
+  const option = document.createElement('option')
+  option.value = id
+  option.textContent = list
+  newTaskList.appendChild(option)
 }
 
 function newTask() {
@@ -88,6 +90,31 @@ function newTask() {
   hideNewTaskDiv()
 }
 
+function newList(e) {
+  if (e.key !== 'Enter') return
+  const list = e.target.value
+  if (list.length < 3 || list.length > 25) return
+
+  data.lists.push(list)
+  storeLocalStorageData()
+  createListHTML(list, data.lists.indexOf(list))
+}
+
+function showNewTaskDiv() {
+  newTaskTitleWarning.classList.add('hidden')
+  newTaskDescriptionWarning.classList.add('hidden')
+  newTaskDiv.style.transition = 'none'
+  newTaskDiv.style.top = '-50%'
+  requestAnimationFrame(() => {
+    newTaskDiv.style.transition = 'top 1s'
+    newTaskDiv.style.top = '50%'
+  })
+}
+
+function hideNewTaskDiv() {
+  newTaskDiv.style.top = '150%'
+}
+
 function generalClickHandler(e) {
   const target = e.target
   const parent = target.parentElement
@@ -101,11 +128,12 @@ function optionsClickHandler(target) {
   if (target.id === 'option-tasks') optionTasks(target)
   if (target.id === 'option-important') optionImportant(target)
   if (target.id === 'option-completed') optionCompleted(target)
+  if (target.id.indexOf('list-') > -1) optionList(target)
 }
 
 function optionFilter(task) {
-  if (selectedFilter.id === 'option-tasks') return true
-  if (selectedFilter.id === 'option-important') return data.tasks[task.id].important
+  if (selectedFilter.id === 'option-tasks') return !data.tasks[task.id].completed && !data.tasks[task.id].important
+  if (selectedFilter.id === 'option-important') return !data.tasks[task.id].completed && data.tasks[task.id].important
   if (selectedFilter.id === 'option-completed') return data.tasks[task.id].completed
 }
 
@@ -114,9 +142,15 @@ function searchFilter(task) {
   return data.tasks[task.id].title.toLowerCase().indexOf(filter) > -1
 }
 
+function listFilter(task) {
+  const taskListId = data.tasks[task.id].listID
+  const listId = selectedList.id.split('-')[1]
+  return taskListId == listId
+}
+
 function updateFilteredTasks() {
   for (const task of tasksContainer.children) {
-    if (optionFilter(task) && searchFilter(task)) task.classList.remove('hidden')
+    if (optionFilter(task) && searchFilter(task) && listFilter(task)) task.classList.remove('hidden')
     else task.classList.add('hidden')
   }
 }
@@ -145,6 +179,13 @@ function optionCompleted(target) {
   updateFilteredTasks()
 }
 
+function optionList(target) {
+  selectedList.classList.remove('options__option--selected')
+  selectedList = target
+  selectedList.classList.add('options__option--selected')
+  updateFilteredTasks()
+}
+
 function searchTask() {
   updateFilteredTasks()
 }
@@ -160,30 +201,16 @@ function taskImportant(target) {
   const taskHTML = target.parentElement.parentElement
   data.tasks[taskHTML.id].important = !data.tasks[taskHTML.id].important
   storeLocalStorageData()
+  taskHTML.children[1].classList.toggle('task__title--important')
 }
 
 function newTaskColorChange(e) {
   e.target.style.background = e.target.value.split(' ')[0]
 }
 
-function addNewList(e) {
-  if (e.key === 'Enter') {
-    const list = e.target.value
-    if (list.length < 3 || list.length > 20) return
-
-    const div = document.createElement('div')
-    div.id = 'list-' + list
-    div.classList.add('options__option')
-    div.textContent = list
-    e.target.value = ''
-
-    e.target.before(div)
-  }
-}
-
 // Event listeners
 taskSearch.addEventListener('input', searchTask)
-optionsNewList.addEventListener('keydown', addNewList)
+optionsNewList.addEventListener('keydown', newList)
 mainContainer.addEventListener('click', generalClickHandler)
 newTaskColor.addEventListener('change', newTaskColorChange)
 newTaskCancel.addEventListener('click', hideNewTaskDiv)

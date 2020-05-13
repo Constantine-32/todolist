@@ -135,6 +135,9 @@ main {
 .task__title--completed {
   text-decoration: line-through;
 }
+.task__title--important {
+  font-weight: bold;
+}
 .new-task,
 .info-task {
   position: absolute;
