@@ -3,7 +3,8 @@ const optionsNewList = document.querySelector('.options__newlist')
 const mainContainer = document.querySelector('main')
 const tasksHeader = document.querySelector('.tasks__header')
 const tasksContainer = document.querySelector('.tasks__container')
-const newTaskDiv = document.querySelector('.new-task')
+const newTaskContainer = document.querySelector('.new-task-container')
+const infoTaskContainer = document.querySelector('.info-task-container')
 const newTaskTitle = document.querySelector('#new-task-title')
 const newTaskTitleWarning = document.querySelector('#new-task-title-warning')
 const newTaskDescription = document.querySelector('#new-task-description')
@@ -14,6 +15,9 @@ const newTaskColor = document.querySelector('#new-task-color')
 const newTaskList = document.querySelector('#new-task-list')
 const newTaskAccept = document.querySelector('#new-task-accept')
 const newTaskCancel = document.querySelector('#new-task-cancel')
+const infoTaskTitle = document.querySelector('#info-task-title')
+const infoTaskDescription = document.querySelector('#info-task-description')
+const infoTaskAccept = document.querySelector('#info-task-accept')
 
 let selectedFilter = document.querySelector('#option-tasks')
 let selectedList = document.querySelector('#list-0')
@@ -103,16 +107,29 @@ function newList(e) {
 function showNewTaskDiv() {
   newTaskTitleWarning.classList.add('hidden')
   newTaskDescriptionWarning.classList.add('hidden')
-  newTaskDiv.style.transition = 'none'
-  newTaskDiv.style.top = '-50%'
+  newTaskContainer.style.transition = 'none'
+  newTaskContainer.style.top = '-100%'
   requestAnimationFrame(() => {
-    newTaskDiv.style.transition = 'top 1s'
-    newTaskDiv.style.top = '50%'
+    newTaskContainer.style.transition = 'top 1s'
+    newTaskContainer.style.top = '0'
   })
 }
 
 function hideNewTaskDiv() {
-  newTaskDiv.style.top = '150%'
+  newTaskContainer.style.top = '200%'
+}
+
+function showInfoTaskDiv() {
+  infoTaskContainer.style.transition = 'none'
+  infoTaskContainer.style.top = '-100%'
+  requestAnimationFrame(() => {
+    infoTaskContainer.style.transition = 'top 1s'
+    infoTaskContainer.style.top = '0'
+  })
+}
+
+function hideInfoTaskDiv() {
+  infoTaskContainer.style.top = '200%'
 }
 
 function generalClickHandler(e) {
@@ -122,6 +139,15 @@ function generalClickHandler(e) {
   if (target.classList.contains('checkbox-completed')) taskCompleted(target)
   if (target.classList.contains('checkbox-important')) taskImportant(target)
   if (target.classList.contains('tasks__new-task')) showNewTaskDiv()
+  if (target.classList.contains('task')) taskInfo(target)
+  if (parent.classList.contains('task')) taskInfo(parent)
+}
+
+function taskInfo(target) {
+  const task = data.tasks[target.id]
+  infoTaskTitle.textContent = 'Title: ' + task.title
+  infoTaskDescription.textContent = 'Description: ' + task.description
+  showInfoTaskDiv()
 }
 
 function optionsClickHandler(target) {
@@ -208,6 +234,16 @@ function newTaskColorChange(e) {
   e.target.style.background = e.target.value.split(' ')[0]
 }
 
+function newTaskContainerClick(e) {
+  if (e.target.classList.contains('new-task-container'))
+    hideNewTaskDiv()
+}
+
+function infoTaskContainerClick(e) {
+  if (e.target.classList.contains('info-task-container'))
+    hideInfoTaskDiv()
+}
+
 // Event listeners
 taskSearch.addEventListener('input', searchTask)
 optionsNewList.addEventListener('keydown', newList)
@@ -215,3 +251,6 @@ mainContainer.addEventListener('click', generalClickHandler)
 newTaskColor.addEventListener('change', newTaskColorChange)
 newTaskCancel.addEventListener('click', hideNewTaskDiv)
 newTaskAccept.addEventListener('click', newTask)
+newTaskContainer.addEventListener('click', newTaskContainerClick)
+infoTaskAccept.addEventListener('click', hideInfoTaskDiv)
+infoTaskContainer.addEventListener('click', infoTaskContainerClick)

@@ -28,54 +28,71 @@
   </section>
   <button class="tasks__new-task"></button>
 </main>
-<div class="new-task">
-  <h1>New Task</h1>
-  <div class="new-task__section">
-    <label>Title</label>
-    <input id="new-task-title" type="text" maxlength="50">
-  </div>
-  <div class="new-task__section">
-    <div id="new-task-title-warning"  class="new-task__section__warning hidden">Title is required with a lenght between 3 to 50</div>
-  </div>
-  <div class="new-task__section">
-    <label>Description</label>
-    <textarea id="new-task-description" rows="4" maxlength="500"></textarea>
-  </div>
-  <div class="new-task__section">
-    <div id="new-task-description-warning" class="new-task__section__warning hidden">Description is required with a max length of 500</div>
-  </div>
-  <div class="new-task__section">
-    <label>Completed</label>
-    <label class="checkbox-label"><input type="checkbox" id="new-task-completed"><span class="checkbox-completed"></span></label>
-    <label>Important</label>
-    <label class="checkbox-label"><input type="checkbox" id="new-task-important"><span class="checkbox-important"></span></label>
-  </div>
-  <div class="new-task__section">
-    <label>Task color</label>
-    <select id="new-task-color">
-      <option value="#ffffff" style="background: #ffffff">White</option>
-      <option value="#e74c3c" style="background: #e74c3c">Alizarin</option>
-      <option value="#e67e22" style="background: #e67e22">Carrot</option>
-      <option value="#f1c40f" style="background: #f1c40f">Sun Flower</option>
-      <option value="#2ecc71" style="background: #2ecc71">Emerald</option>
-      <option value="#1abc9c" style="background: #1abc9c">Turquoise</option>
-      <option value="#3498db" style="background: #3498db">Peter River</option>
-      <option value="#9b59b6" style="background: #9b59b6">Amethyst</option>
-    </select>
-  </div>
-  <div class="new-task__section">
-    <label>Custom list</label>
-    <select id="new-task-list">
-      <option value="0" selected>Default</option>
-    </select>
-  </div>
-  <div class="new-task__section">
-    <button id="new-task-accept">Accept</button>
-    <button id="new-task-cancel">Cancel</button>
+<div class="new-task-container">
+  <div class="new-task">
+    <h1>New Task</h1>
+    <div class="new-task__section">
+      <label>Title</label>
+      <input id="new-task-title" type="text" maxlength="50">
+    </div>
+    <div class="new-task__section">
+      <div id="new-task-title-warning" class="new-task__section__warning hidden">Title is required with a lenght between
+        3 to 50
+      </div>
+    </div>
+    <div class="new-task__section">
+      <label>Description</label>
+      <textarea id="new-task-description" rows="4" maxlength="500"></textarea>
+    </div>
+    <div class="new-task__section">
+      <div id="new-task-description-warning" class="new-task__section__warning hidden">Description is required with a
+        max length of 500
+      </div>
+    </div>
+    <div class="new-task__section">
+      <label>Completed</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="new-task-completed">
+        <span class="checkbox-completed"></span>
+      </label>
+      <label>Important</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="new-task-important">
+        <span class="checkbox-important"></span>
+      </label>
+    </div>
+    <div class="new-task__section">
+      <label>Task color</label>
+      <select id="new-task-color">
+        <option value="#ffffff" style="background: #ffffff">White</option>
+        <option value="#e74c3c" style="background: #e74c3c">Alizarin</option>
+        <option value="#e67e22" style="background: #e67e22">Carrot</option>
+        <option value="#f1c40f" style="background: #f1c40f">Sun Flower</option>
+        <option value="#2ecc71" style="background: #2ecc71">Emerald</option>
+        <option value="#1abc9c" style="background: #1abc9c">Turquoise</option>
+        <option value="#3498db" style="background: #3498db">Peter River</option>
+        <option value="#9b59b6" style="background: #9b59b6">Amethyst</option>
+      </select>
+    </div>
+    <div class="new-task__section">
+      <label>Custom list</label>
+      <select id="new-task-list">
+        <option value="0" selected>Default</option>
+      </select>
+    </div>
+    <div class="new-task__section">
+      <button id="new-task-accept">Accept</button>
+      <button id="new-task-cancel">Cancel</button>
+    </div>
   </div>
 </div>
-<div class="info-task">
-  <h1>Task Info</h1>
+<div class="info-task-container">
+  <div class="info-task">
+    <h1>Task Info</h1>
+    <div id="info-task-title" class="info-task__section"></div>
+    <div id="info-task-description" class="info-task__section"></div>
+    <div class="info-task__section"><button id="info-task-accept">Accept</button></div>
+  </div>
 </div>
 </body>
 </html>
