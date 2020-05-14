@@ -235,28 +235,31 @@ function listDelete(list) {
   const listName = data.lists[index]
   const listTasks = data.tasks.filter(e => e.list === listName)
   if (listTasks.length > 0) {
-    listDeleteStateData = { list, index, listTasks }
-      showListWarning()
-    return
-  }
-  data.lists.splice(index, 1)
-  dataHTML.lists.splice(index, 1)
-  storeLocalStorageData()
-  optionsContainer.removeChild(list)
-  selectedList = document.querySelector('.options__list')
+    listDeleteStateData = { list, index, listName, listTasks }
+    showListWarning()
+  } else listDeleteHandler(list, index, listName, listTasks)
+
 }
 
-function listWarningAceptCLick() {
-  const list = listDeleteStateData.list
-  const index = listDeleteStateData.index
-  const listTasks = listDeleteStateData.listTasks
+function listDeleteHandler(list, index, listName, listTasks) {
   listTasks.forEach(task => taskDelete(dataHTML.tasks[data.tasks.indexOf(task)]))
   data.lists.splice(index, 1)
   dataHTML.lists.splice(index, 1)
   storeLocalStorageData()
   optionsContainer.removeChild(list)
+  Array.from(document.querySelectorAll('option'))
+      .filter(option => option.value === listName)
+      .forEach(option => option.parentNode.removeChild(option))
   selectedList = document.querySelector('.options__list')
   hideListWarning()
+}
+
+function listWarningAceptCLick() {
+  const list = listDeleteStateData.list
+  const index = listDeleteStateData.index
+  const listName = listDeleteStateData.listName
+  const listTasks = listDeleteStateData.listTasks
+  listDeleteHandler(list, index, listName, listTasks)
 }
 
 function taskDelete(task) {
