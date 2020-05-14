@@ -145,6 +145,7 @@ function bulkTasks() {
   for (let title of titles) {
     let task = {}
     task.title = title
+    if (!task.title || task.title.length < 3 || task.title.length > 50) continue
     task.description = ''
     task.completed = completed
     task.important = important
