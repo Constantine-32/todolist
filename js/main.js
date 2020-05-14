@@ -351,7 +351,15 @@ function infoTaskContainerClick(e) {
     hideInfoTaskDiv()
 }
 
+function hideModals(e) {
+  if (e.key !== 'Escape') return
+  hideNewTaskDiv()
+  hideBulkTaskDiv()
+  hideInfoTaskDiv()
+}
+
 // Event listeners
+window.addEventListener('keydown', hideModals)
 taskSearch.addEventListener('input', searchTask)
 optionsNewList.addEventListener('keydown', newList)
 mainContainer.addEventListener('click', generalClickHandler)
