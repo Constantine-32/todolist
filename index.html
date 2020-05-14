@@ -137,9 +137,37 @@
 <div class="info-task-container">
   <div class="info-task">
     <h1>Task Info</h1>
-    <div id="info-task-title" class="info-task__section"></div>
-    <div id="info-task-description" class="info-task__section"></div>
-    <div class="info-task__section"><button id="info-task-accept">Accept</button></div>
+    <div class="new-task__section">
+      <label>Title</label>
+      <input id="info-task-title" type="text" disabled>
+    </div>
+    <div class="new-task__section">
+      <label>Description</label>
+      <textarea id="info-task-description" rows="4" disabled></textarea>
+    </div>
+    <div class="new-task__section">
+      <label>Completed</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="info-task-completed" disabled>
+        <span class="checkbox-completed"></span>
+      </label>
+      <label>Important</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="info-task-important" disabled>
+        <span class="checkbox-important"></span>
+      </label>
+    </div>
+    <div class="new-task__section">
+      <label>Task color</label>
+      <input id="info-task-color" type="text" disabled>
+    </div>
+    <div class="new-task__section">
+      <label>Custom list</label>
+      <input id="info-task-list" type="text" disabled>
+    </div>
+    <div class="new-task__section">
+      <button id="info-task-accept">Accept</button>
+    </div>
   </div>
 </div>
 </body>

@@ -4,7 +4,6 @@ const optionsContainer = document.querySelector('.options')
 const optionsNewList = document.querySelector('.options__newlist')
 const tasksHeader = document.querySelector('.tasks__header')
 const tasksContainer = document.querySelector('.tasks__container')
-const infoTaskContainer = document.querySelector('.info-task-container')
 // New task modal elements
 const newTaskContainer = document.querySelector('.new-task-container')
 const newTaskTitle = document.querySelector('#new-task-title')
@@ -28,9 +27,13 @@ const bulkTaskList = document.querySelector('#bulk-task-list')
 const bulkTaskAccept = document.querySelector('#bulk-task-accept')
 const bulkTaskCancel = document.querySelector('#bulk-task-cancel')
 // Info task modal elements
-const infoTaskDiv = document.querySelector('.info-task')
+const infoTaskContainer = document.querySelector('.info-task-container')
 const infoTaskTitle = document.querySelector('#info-task-title')
 const infoTaskDescription = document.querySelector('#info-task-description')
+const infoTaskCompleted = document.querySelector('#info-task-completed')
+const infoTaskImportant = document.querySelector('#info-task-important')
+const infoTaskColor = document.querySelector('#info-task-color')
+const infoTaskList = document.querySelector('#info-task-list')
 const infoTaskAccept = document.querySelector('#info-task-accept')
 // Rest of the variables
 let selectedFilter = document.querySelector('#option-tasks')
@@ -237,13 +240,12 @@ function taskDelete(task) {
 
 function taskInfo(target) {
   const task = data.tasks[dataHTML.tasks.indexOf(target)]
-  infoTaskDiv.innerHTML  = `<div class="info-task__section">Title: ${task.title}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section">Description: ${task.description}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section">Completed: ${task.completed}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section">Important: ${task.important}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section">Color: ${task.color}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section">List: ${task.list}</div>`
-  infoTaskDiv.innerHTML += `<div class="info-task__section"><button id="info-task-accept">Accept</button></div>`
+  infoTaskTitle.value = task.title
+  infoTaskDescription.value = task.description
+  infoTaskCompleted.checked = task.completed
+  infoTaskImportant.checked = task.important
+  infoTaskColor.style.background = task.color
+  infoTaskList.value = task.list
   showInfoTaskDiv()
 }
 
