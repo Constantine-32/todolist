@@ -35,12 +35,19 @@ const infoTaskImportant = document.querySelector('#info-task-important')
 const infoTaskColor = document.querySelector('#info-task-color')
 const infoTaskList = document.querySelector('#info-task-list')
 const infoTaskAccept = document.querySelector('#info-task-accept')
+// List delete warning
+const listWarningContainer = document.querySelector('.list-warning-container')
+const listWarningAccept = document.querySelector('#list-warning-accept')
+const listWarningCancel = document.querySelector('#list-warning-cancel')
 // Rest of the variables
 let selectedFilter = document.querySelector('#option-tasks')
 let selectedList = document.querySelector('.options__list')
+
 const data = loadLocalStorageData()
 const dataHTML = { lists: [selectedList], tasks: [] }
 createDataHTML()
+
+let listDeleteStateData = undefined
 
 // Functions
 function loadLocalStorageData() {
@@ -201,6 +208,14 @@ function hideInfoTaskDiv() {
   infoTaskContainer.style.top = '200%'
 }
 
+function showListWarning() {
+  listWarningContainer.classList.remove('hidden')
+}
+
+function hideListWarning() {
+  listWarningContainer.classList.add('hidden')
+}
+
 function generalClickHandler(e) {
   const target = e.target
   const parent = target.parentElement
@@ -220,14 +235,28 @@ function listDelete(list) {
   const listName = data.lists[index]
   const listTasks = data.tasks.filter(e => e.list === listName)
   if (listTasks.length > 0) {
-    // ask
-    listTasks.forEach(task => taskDelete(dataHTML.tasks[data.tasks.indexOf(task)]))
+    listDeleteStateData = { list, index, listTasks }
+      showListWarning()
+    return
   }
   data.lists.splice(index, 1)
   dataHTML.lists.splice(index, 1)
   storeLocalStorageData()
   optionsContainer.removeChild(list)
   selectedList = document.querySelector('.options__list')
+}
+
+function listWarningAceptCLick() {
+  const list = listDeleteStateData.list
+  const index = listDeleteStateData.index
+  const listTasks = listDeleteStateData.listTasks
+  listTasks.forEach(task => taskDelete(dataHTML.tasks[data.tasks.indexOf(task)]))
+  data.lists.splice(index, 1)
+  dataHTML.lists.splice(index, 1)
+  storeLocalStorageData()
+  optionsContainer.removeChild(list)
+  selectedList = document.querySelector('.options__list')
+  hideListWarning()
 }
 
 function taskDelete(task) {
@@ -376,3 +405,6 @@ bulkTaskCancel.addEventListener('click', hideBulkTaskDiv)
 
 infoTaskAccept.addEventListener('click', hideInfoTaskDiv)
 infoTaskContainer.addEventListener('click', infoTaskContainerClick)
+
+listWarningAccept.addEventListener('click', listWarningAceptCLick)
+listWarningCancel.addEventListener('click', hideListWarning)
