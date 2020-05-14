@@ -43,7 +43,6 @@ header h1 {
   padding: 0 10px;
 }
 main {
-  position: relative;
   display: flex;
   border: 2px solid #333;
 }
@@ -90,6 +89,7 @@ main {
   background: #222;
 }
 .tasks {
+  position: relative;
   width: 75%;
   height: 70vh;
 }
@@ -101,6 +101,7 @@ main {
   border-bottom: 2px solid #333;
 }
 .tasks__container {
+  height: calc(100% - 60px);
   overflow: auto;
 }
 .tasks__container::-webkit-scrollbar {
@@ -120,6 +121,19 @@ main {
   border: 2px solid #333;
   border-radius: 50%;
   background: url("../img/bg-new-task.png") center center no-repeat;
+  cursor: pointer;
+}
+.tasks__bulk-task {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  left: 0;
+  top: 0;
+  margin: 9px;
+  background: #111;
+  border: 2px solid #333;
+  border-radius: 50%;
+  background: url("../img/bg-bulk-task.png") center center no-repeat;
   cursor: pointer;
 }
 .task {
@@ -162,6 +176,7 @@ main {
   background: #e74c3c;
 }
 .new-task-container,
+.bulk-task-container,
 .info-task-container {
   position: absolute;
   height: 100vh;
@@ -180,6 +195,8 @@ main {
   background: #111;
   border: 2px solid #333;
   transition: top 1s;
+  width: 453px;
+  overflow-wrap: normal;
 }
 .new-task h1,
 .info-task h1 {

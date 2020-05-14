@@ -25,8 +25,9 @@
   <section class="tasks">
     <div class="tasks__header">Tasks</div>
     <div class="tasks__container"></div>
+    <button class="tasks__new-task"></button>
+    <button class="tasks__bulk-task"></button>
   </section>
-  <button class="tasks__new-task"></button>
 </main>
 <div class="new-task-container">
   <div class="new-task">
@@ -83,6 +84,53 @@
     <div class="new-task__section">
       <button id="new-task-accept">Accept</button>
       <button id="new-task-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="bulk-task-container">
+  <div class="new-task">
+    <h1>New Bulk Tasks</h1>
+    <div class="new-task__section">
+      <label>Tasks</label>
+      <textarea id="bulk-task-titles" rows="4" maxlength="1000"></textarea>
+    </div>
+    <div class="new-task__section">
+      <div id="bulk-task-titles-warning" class="new-task__section__warning hidden">Tasks box must be between 3 and 1000 characters</div>
+    </div>
+    <div class="new-task__section">
+      <label>Completed</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="bulk-task-completed">
+        <span class="checkbox-completed"></span>
+      </label>
+      <label>Important</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="bulk-task-important">
+        <span class="checkbox-important"></span>
+      </label>
+    </div>
+    <div class="new-task__section">
+      <label>Task color</label>
+      <select id="bulk-task-color">
+        <option value="#ffffff" style="background: #ffffff">White</option>
+        <option value="#e74c3c" style="background: #e74c3c">Alizarin</option>
+        <option value="#e67e22" style="background: #e67e22">Carrot</option>
+        <option value="#f1c40f" style="background: #f1c40f">Sun Flower</option>
+        <option value="#2ecc71" style="background: #2ecc71">Emerald</option>
+        <option value="#1abc9c" style="background: #1abc9c">Turquoise</option>
+        <option value="#3498db" style="background: #3498db">Peter River</option>
+        <option value="#9b59b6" style="background: #9b59b6">Amethyst</option>
+      </select>
+    </div>
+    <div class="new-task__section">
+      <label>Custom list</label>
+      <select id="bulk-task-list">
+        <option value="Default" selected>Default</option>
+      </select>
+    </div>
+    <div class="new-task__section">
+      <button id="bulk-task-accept">Accept</button>
+      <button id="bulk-task-cancel">Cancel</button>
     </div>
   </div>
 </div>

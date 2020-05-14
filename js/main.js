@@ -1,10 +1,12 @@
 const taskSearch = document.querySelector('#task-search')
-const optionsNewList = document.querySelector('.options__newlist')
 const mainContainer = document.querySelector('main')
+const optionsContainer = document.querySelector('.options')
+const optionsNewList = document.querySelector('.options__newlist')
 const tasksHeader = document.querySelector('.tasks__header')
 const tasksContainer = document.querySelector('.tasks__container')
-const newTaskContainer = document.querySelector('.new-task-container')
 const infoTaskContainer = document.querySelector('.info-task-container')
+// New task modal elements
+const newTaskContainer = document.querySelector('.new-task-container')
 const newTaskTitle = document.querySelector('#new-task-title')
 const newTaskTitleWarning = document.querySelector('#new-task-title-warning')
 const newTaskDescription = document.querySelector('#new-task-description')
@@ -15,10 +17,22 @@ const newTaskColor = document.querySelector('#new-task-color')
 const newTaskList = document.querySelector('#new-task-list')
 const newTaskAccept = document.querySelector('#new-task-accept')
 const newTaskCancel = document.querySelector('#new-task-cancel')
+// Bulk new tasks modal elements
+const bulkTaskContainer = document.querySelector('.bulk-task-container')
+const bulkTaskTitles = document.querySelector('#bulk-task-titles')
+const bulkTaskTitlesWarning = document.querySelector('#bulk-task-titles-warning')
+const bulkTaskCompleted = document.querySelector('#bulk-task-completed')
+const bulkTaskImportant = document.querySelector('#bulk-task-important')
+const bulkTaskColor = document.querySelector('#bulk-task-color')
+const bulkTaskList = document.querySelector('#bulk-task-list')
+const bulkTaskAccept = document.querySelector('#bulk-task-accept')
+const bulkTaskCancel = document.querySelector('#bulk-task-cancel')
+// Info task modal elements
+const infoTaskDiv = document.querySelector('.info-task')
 const infoTaskTitle = document.querySelector('#info-task-title')
 const infoTaskDescription = document.querySelector('#info-task-description')
 const infoTaskAccept = document.querySelector('#info-task-accept')
-
+// Rest of the variables
 let selectedFilter = document.querySelector('#option-tasks')
 let selectedList = document.querySelector('.options__list')
 const data = loadLocalStorageData()
@@ -73,10 +87,14 @@ function createListHTML(list) {
   optionsNewList.before(div)
   dataHTML.lists.push(div)
 
-  const option = document.createElement('option')
+  let option = document.createElement('option')
   option.value = list
   option.textContent = list
   newTaskList.appendChild(option)
+  option = document.createElement('option')
+  option.value = list
+  option.textContent = list
+  bulkTaskList.appendChild(option)
 }
 
 function newTask() {
@@ -100,6 +118,33 @@ function newTask() {
   storeTask(task)
   createTaskHTML(task)
   hideNewTaskDiv()
+}
+
+function bulkTasks() {
+  bulkTaskTitlesWarning.classList.add('hidden')
+  const data = bulkTaskTitles.value
+  if (!data || data.length < 3 || data.length > 1000) {
+    bulkTaskTitlesWarning.classList.remove('hidden')
+    return
+  }
+  const titles = data.split('\n')
+  const completed = bulkTaskCompleted.checked
+  const important = bulkTaskImportant.checked
+  const color = bulkTaskColor.value
+  const list = bulkTaskList.value
+  for (let title of titles) {
+    let task = {}
+    task.title = title
+    task.description = ''
+    task.completed = completed
+    task.important = important
+    task.color = color
+    task.list = list
+    storeTask(task)
+    createTaskHTML(task)
+  }
+  bulkTaskTitles.value = ''
+  hideBulkTaskDiv()
 }
 
 function newList(e) {
@@ -126,6 +171,20 @@ function hideNewTaskDiv() {
   newTaskContainer.style.top = '200%'
 }
 
+function showBulkTaskDiv() {
+  bulkTaskTitlesWarning.classList.add('hidden')
+  bulkTaskContainer.style.transition = 'none'
+  bulkTaskContainer.style.top = '-100%'
+  requestAnimationFrame(() => {
+    bulkTaskContainer.style.transition = 'top 1s'
+    bulkTaskContainer.style.top = '0'
+  })
+}
+
+function hideBulkTaskDiv() {
+  bulkTaskContainer.style.top = '200%'
+}
+
 function showInfoTaskDiv() {
   infoTaskContainer.style.transition = 'none'
   infoTaskContainer.style.top = '-100%'
@@ -147,13 +206,25 @@ function generalClickHandler(e) {
   if (target.classList.contains('checkbox-completed')) taskCompleted(target)
   if (target.classList.contains('checkbox-important')) taskImportant(target)
   if (target.classList.contains('tasks__new-task')) showNewTaskDiv()
+  if (target.classList.contains('tasks__bulk-task')) showBulkTaskDiv()
   if (target.classList.contains('task')) taskInfo(target)
   if (target.classList.contains('task__delete')) taskDelete(parent)
   else if (parent.classList.contains('task')) taskInfo(parent)
 }
 
 function listDelete(list) {
-  console.log(list)
+  const index = dataHTML.lists.indexOf(list)
+  const listName = data.lists[index]
+  const listTasks = data.tasks.filter(e => e.list === listName)
+  if (listTasks.length > 0) {
+    // ask
+    listTasks.forEach(task => taskDelete(dataHTML.tasks[data.tasks.indexOf(task)]))
+  }
+  data.lists.splice(index, 1)
+  dataHTML.lists.splice(index, 1)
+  storeLocalStorageData()
+  optionsContainer.removeChild(list)
+  selectedList = document.querySelector('.options__list')
 }
 
 function taskDelete(task) {
@@ -166,8 +237,13 @@ function taskDelete(task) {
 
 function taskInfo(target) {
   const task = data.tasks[dataHTML.tasks.indexOf(target)]
-  infoTaskTitle.textContent = 'Title: ' + task.title
-  infoTaskDescription.textContent = 'Description: ' + task.description
+  infoTaskDiv.innerHTML  = `<div class="info-task__section">Title: ${task.title}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section">Description: ${task.description}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section">Completed: ${task.completed}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section">Important: ${task.important}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section">Color: ${task.color}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section">List: ${task.list}</div>`
+  infoTaskDiv.innerHTML += `<div class="info-task__section"><button id="info-task-accept">Accept</button></div>`
   showInfoTaskDiv()
 }
 
@@ -263,6 +339,11 @@ function newTaskContainerClick(e) {
     hideNewTaskDiv()
 }
 
+function bulkTaskContainerClick(e) {
+  if (e.target.classList.contains('bulk-task-container'))
+    hideBulkTaskDiv()
+}
+
 function infoTaskContainerClick(e) {
   if (e.target.classList.contains('info-task-container'))
     hideInfoTaskDiv()
@@ -272,9 +353,16 @@ function infoTaskContainerClick(e) {
 taskSearch.addEventListener('input', searchTask)
 optionsNewList.addEventListener('keydown', newList)
 mainContainer.addEventListener('click', generalClickHandler)
-newTaskColor.addEventListener('change', newTaskColorChange)
-newTaskCancel.addEventListener('click', hideNewTaskDiv)
-newTaskAccept.addEventListener('click', newTask)
+
 newTaskContainer.addEventListener('click', newTaskContainerClick)
+newTaskColor.addEventListener('change', newTaskColorChange)
+newTaskAccept.addEventListener('click', newTask)
+newTaskCancel.addEventListener('click', hideNewTaskDiv)
+
+bulkTaskContainer.addEventListener('click', bulkTaskContainerClick)
+bulkTaskColor.addEventListener('change', newTaskColorChange)
+bulkTaskAccept.addEventListener('click', bulkTasks)
+bulkTaskCancel.addEventListener('click', hideBulkTaskDiv)
+
 infoTaskAccept.addEventListener('click', hideInfoTaskDiv)
 infoTaskContainer.addEventListener('click', infoTaskContainerClick)

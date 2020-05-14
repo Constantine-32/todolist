@@ -44,7 +44,6 @@ header
     padding 0 10px
 
 main
-  position relative
   display flex
   border border
 
@@ -88,6 +87,7 @@ main
     background #222
 
 .tasks
+  position relative
   width 75%
   height 70vh
 
@@ -99,6 +99,7 @@ main
   border-bottom border
 
 .tasks__container
+  height calc(100% - 60px)
   overflow auto
 
 .tasks__container::-webkit-scrollbar
@@ -118,6 +119,19 @@ main
   border border
   border-radius 50%
   background url("../img/bg-new-task.png") center center no-repeat
+  cursor pointer
+
+.tasks__bulk-task
+  position absolute
+  height 40px
+  width 40px
+  left 0
+  top 0
+  margin 9px
+  background #111
+  border border
+  border-radius 50%
+  background url("../img/bg-bulk-task.png") center center no-repeat
   cursor pointer
 
 .task
@@ -157,7 +171,7 @@ main
   &:hover
     background #e74c3c
 
-.new-task-container, .info-task-container
+.new-task-container, .bulk-task-container, .info-task-container
   position absolute
   height 100vh
   width 100vw
@@ -174,6 +188,8 @@ main
   background #111
   border border
   transition top 1s
+  width 453px
+  overflow-wrap normal
   h1
     font-size 2rem
     height 5rem
